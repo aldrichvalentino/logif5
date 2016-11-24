@@ -1,5 +1,21 @@
-:- dynamic(at/2).
-:- dynamic(i_am_at/1).
+:- dynamic at/2, i_am_at/1.
+
+i_am_at(livingroom).
+
+instructions :-
+        nl,
+        write('Weclome to Hallowed!.'), nl,
+        write('Available commands are:'), nl,
+        write('start.                   -- to start the game.'), nl,
+        write('n.  s.  e.  w.  u.  d.   -- to go in that direction.'), nl,
+        write('take(Object).            -- to pick up an object.'), nl,
+        write('drop(Object).            -- to put down an object.'), nl,
+        write('look.                    -- to look around you again.'), nl,
+        write('instructions.            -- to see this message again.'), nl,
+        write('save(Filename).		 -- to save current game state.'), nl,
+	write('load(Filename).          -- to load previously save state.'), nl,
+	write('quit.			 -- to end the game.'), nl,
+        nl.
 
 path(livingroom, e, lifestyleroom):- at(flashlight, in_bag).
 path(livingroom, e, lifestyleroom):-
@@ -93,10 +109,14 @@ describe(maidsroom):-
 	write('You are in a maids room.'),nl,
 	write('To the west is a warehouse.'),nl.
 
-at(object, livingroom).
-at(key, livingroom).
 
-i_am_at(livingroom).
+at(libraryKey, lifestyleroom).
+at(television, lifestyleroom).
+at(piano, lifestyleroom).
+at(flashlight, parentsroom).
+at(bed, parentsroom).
+at(familyphotom, parentsroom).
+at(clock, parentsroom).
 
 notice(X) :-
 	at(Y, X),
@@ -158,21 +178,6 @@ start :-
 	read(X),
 	call(X),
 	fail.
-
-instructions :-
-        nl,
-        write('Weclome to Hallowed!.'), nl,
-        write('Available commands are:'), nl,
-        write('start.                   -- to start the game.'), nl,
-        write('n.  s.  e.  w.  u.  d.   -- to go in that direction.'), nl,
-        write('take(Object).            -- to pick up an object.'), nl,
-        write('drop(Object).            -- to put down an object.'), nl,
-        write('look.                    -- to look around you again.'), nl,
-        write('instructions.            -- to see this message again.'), nl,
-        write('save(Filename).		 -- to save current game state.'), nl,
-	write('load(Filename).          -- to load previously save state.'), nl,
-	write('quit.			 -- to end the game.'), nl,
-        nl.
 
 
 
