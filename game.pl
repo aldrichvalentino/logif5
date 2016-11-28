@@ -2,9 +2,6 @@
 
 :- dynamic(at/3).
 :- dynamic(i_am_at/1).
-:- dynamic(player/3).
-
-player([],50,50). /* list of item, consciousness bar, hunger bar */
 
 i_am_at(livingroom).
 
@@ -17,6 +14,8 @@ instructions :-
         write('take(Object).            -- to pick up an object.'), nl,
         write('drop(Object).            -- to put down an object.'), nl,
         write('look.                    -- to look around you again.'), nl,
+        write('examine(Object).         -- to look up the description of an object.'), nl,
+        write('open(Object).            -- to open an object that can be open.'),nl,
         write('instructions.            -- to see this message again.'), nl,
         write('save(Filename).          -- to save current game state.'), nl,
         write('load(Filename).          -- to load previously save state.'), nl,
@@ -75,14 +74,14 @@ describe(parentsroom):-
   write('You are in a parents room.'),nl,
   write('To the north is a living room.'), nl,
   write('To the east is a library.'),nl.
-  
+
 describe(library):-
   alive(sorcerer),
   write('Welcome pals, seems you stuck in here huh?'),nl,
   write('I am sorcerer. *CRINK* *CRINK*'),nl,
   write('Just remember you are not alone. I am here to help you out.'),nl.
-  
-  
+
+
 describe(library):-
   write('You are in a library.'),nl,
   write('To the west is a parents room.'),nl.
@@ -103,7 +102,7 @@ describe(diningroom):-
   write('To the west is a lifestyle room;'),nl,
   write('There is a stairs, you can go up from here.'),nl.
 
-describe(kidsroom):- 
+describe(kidsroom):-
   alive(doll),
   write('*Moommyy?? Lets playy*'),nl,
   write('Where is that sound coming from??'),nl,
@@ -120,7 +119,7 @@ describe(kitchen):-
   write('To the east is a backyard;'),nl,
   write('To the west is a dining room;'),nl,
   write('There is a stairs, you can go down from here.'),nl.
-  
+
 describe(backyard):-
   alive(mrX),
   write('OHH NO NO NO.'),nl,
@@ -139,23 +138,22 @@ describe(warehouse):-
   write('There is a stairs, you can go up from here.').
 
 describe(maidsroom):-
-  at(deadBody,maidsroom,not),
   write('The smells is horrible here.'), nl,
   write('It seems that is something behind that bed!'),nl,
   write('LOOOKK!! A dead body!.').
-  
+
 describe(maidsroom):-
   write('You are in a maids room.'),nl,
   write('To the west is a warehouse.').
 
-consciousnessbar(mrX) :- 
+consciousnessbar(mrX) :-
     player(_,X,_), X is X - 5.
 
+/* Pendefinisian Objek */
 at(libraryKey, lifestyleroom, not).
 at(television, lifestyleroom, fixed).
 at(piano, lifestyleroom, fixed).
 at(flashlight, parentsroom, not).
-at(bed, parentsroom, fixed).
 at(familyPhoto, parentsroom, fixed).
 at(clock, parentsroom, fixed).
 at(magicalBook, library, not).
@@ -175,9 +173,8 @@ at(strangeLittleHill, backyard, fixed).
 at(fruitTrees, backyard, fixed).
 at(emptyChickenShack, backyard, fixed).
 at(strangeDoll, kidsroom, not).
-at(bed, kidsroom, fixed).
 at(dollcastle, kidsroom, fixed).
-at(strangebox, kidsroom, not).
+at(strangebox, kidsroom, fixed).
 at(bloodySaw, kidsroom, not).
 at(shovel, storageroom, not).
 at(hammer, storageroom, not).
@@ -187,6 +184,80 @@ at(deadBody, maidsroom, not).
 at(thirdPassKey, maidsroom,not).
 at(bed, maidsroom, fixed).
 at(lighter, maidsroom, not).
+
+/* Deskripsi Objek */
+examine(libraryKey) :- write('An old key to open the library room.\n').
+examine(television) :- write('A televesion that has not been used for a while.\n').
+examine(piano) :- write('A piano with classical compositions on top.\n').
+examine(flashlight) :- write('A small flashlight.\n').
+examine(familyPhoto) :- write('What a beautiful family photo... I wonder what happened to the family.\n').
+examine(clock) :- write('The clock has stopped.\n').
+examine(magicalBook) :- write('A really starnge book that can tell you wisdom and information about the house.\n').
+examine(bookShelf) :- write('A bookshelf, there is a lot of old book on it, however there is one book that looks interesting..\n').
+examine(fireplace) :- write('A nice fireplace in the middle of the library. The owner really knows how to live.\n').
+examine(sink) :- write('A sink with running water. I wonder why the pipe is working...\n').
+examine(bathtub) :- write('A bathtub covered with dirt.\n').
+examine(shower) :- write('The clock has stopped.\n').
+examine(table) :- write('A dusty old table that can be used to eat snacks.\n').
+examine(drawer) :- write('.\n').
+examine(refrigerator) :- write('A refrigerator, the electric source is unplugged.\n').
+examine(stove) :- write('A stove, can be used to cook.\n').
+examine(pan) :- write('Just an ordinary pan.\n').
+examine(bloodyknife) :- write('A knife with a lot of blood on it, i wonder why....\n').
+examine(spatula) :- write('An ordinary spatula, it is usually used to cook\n').
+examine(strangelittleHill) :- write('A little hill, maybe it can be used to bury something.\n').
+examine(fruitTrees) :- write('A Tree with a lot of fruits on it.\n').
+examine(emptyChickenShack) :- write('Looks like it is a chicken shack, there is an egg inside.\n').
+examine(strangeDoll) :- write('The clock has stopped.\n').
+examine(dollcastle) :- write('The clock has stopped.\n').
+examine(strangebox) :- write('The clock has stopped.\n').
+examine(bloodysaw) :- write('A saw with a lot of blood on it, i wonder why.\n').
+examine(shovel) :- write('Just an ordinary shovel.\n').
+examine(hammer) :- write('Just an ordinary hammer.\n').
+examine(gun) :- write('A gun, there is no bullet in it, maybe it has been used...\n').
+examine(screwdriver) :- write('Just an ordinary screwdriver.\n').
+examine(deadBody) :- write('A dead body that smells so bad, i wonder who this is...\n').
+examine(thirdPassKey) :- write('.\n').
+examine(bed) :- write('A bed that seems to be where someone usually sleep.\n').
+examine(lighter) :- write('Just an ordinary lighter.\n').
+
+/* Talk kepada NPC */
+talk(magicalBook) :-
+  i_am_at(library),
+  write('Hello there stranger! You seem lost in confusion.. How can I assist you?\n').
+
+talk(magicalBook) :-
+  i_am_at(library),
+  at(kidsRoomKey, in_bag, not),
+  write('I see you have encountered with the strange uncontrollable doll upstairs'), nl,
+  write('In order to calm the doll down, you have to read this spell'), nl,
+  assertz(at(paperOfSpell, in_bag, not)),
+  write('paperOfSpell taken'), nl,
+  write('Good Luck!'), nl.
+
+
+talk(strangeDoll) :-
+  i_am_at(kidsroom),
+  write('MOMMY?? I want to spend time with you..'), nl,
+  write('Do not try to move me mommy, because I am in love with this room.').
+
+/* Perintah Open */
+listCanOpen([refrigerator,strangebox,emptyChickenShack]).
+
+open(X) :-
+  i_am_at(Y),
+  at(X, Y, fixed),
+  listCanOpen(L),
+  \+ member(X,L),
+  write('Object cannot be open!'), nl.
+
+open(strangebox) :-
+  i_am_at(Y),
+  at(strangebox, Y, fixed),
+  write('strangebox successfully opened..'), nl,
+  \+ at(secondPassKey, in_bag, not), !,
+  write('There is a secondPassKey'),
+  assertz(at(secondPassKey, in_bag, not)).
 
 notice(X) :-
   at(Y, X, _),
@@ -215,7 +286,7 @@ take(X) :-
   at(X, in_bag, not),
   write(X), write(' already in bag.\n'),
   !.
-  
+
 take(X) :-
   i_am_at(Y),
   at(X, Y, fixed),
@@ -232,8 +303,16 @@ take(X) :-
 
 take(X) :-
   write(X), write(' not found here.\n').
-  
-  
+
+/* perintah Drop */
+drop(strangeDoll) :-
+  at(strangeDoll, in_bag, not),
+  i_am_at(_),
+  retract(at(strangeDoll, in_bag, not)),
+  assertz(at(strangeDoll, kidsroom, not)),
+  write(strangeDoll), write(' strangely ran back into the kidsroom'),
+  nl.
+
 drop(X) :-
         at(X, in_bag, not),
         i_am_at(Y),
@@ -265,11 +344,32 @@ w :- go(w).
 u :- go(u).
 d :- go(d).
 
-save(F) :-
-  tell(F),
+save_game(F) :-
+  open(F, write, S),
+  set_output(S),
+  listing(at/3),
   listing(i_am_at/1),
-  listing(at/2),
-  told.
+  close(S),
+  write('Save successful'),nl.
+
+load_game(F) :-
+  retractall(at(_,_,_)),
+  retractall(i_am_at(_)),
+  open(F, read, S),
+  process_file(S),
+  !,
+  close(S),
+  write('Load successful'),nl,
+  look.
+
+process_file(S) :-
+  at_end_of_stream(S).
+
+process_file(S) :-
+  \+ at_end_of_stream(S),
+  read(S, X),
+  assertz(X),
+  process_file(S).
 
 do(n) :- n, !, fail.
 do(e) :- e, !, fail.
@@ -277,10 +377,15 @@ do(s) :- s, !, fail.
 do(w) :- w, !, fail.
 do(u) :- u, !, fail.
 do(d) :- d, !, fail.
+do(save(F)) :- save_game(F), !, fail.
+do(load(F)) :- load_game(F), !, fail.
 do(stat) :- stat, !, fail.
 do(drop(X)) :- drop(X), !, fail.
 do(look) :- look, !, fail.
+do(open(X)) :- open(X), !, fail.
+do(examine(X)) :- examine(X), !, fail.
 do(instructions) :- instructions, !, fail.
+do(talk(X)) :- talk(X), !, fail.
 do(take(X)) :- take(X), !, fail.
 do(quit).
 do(_) :- write('Invalid command.\n'), !, fail.
@@ -296,3 +401,7 @@ start :-
   look,
   game_loop,
   !.
+
+
+
+
