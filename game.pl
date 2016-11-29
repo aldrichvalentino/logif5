@@ -6,7 +6,7 @@
 :- dynamic(mrX_is_here/0).
 :- dynamic(alive/1).
 :- dynamic(win/0).
-i_am_at(livingroom).
+i_am_at(bathroom).
 sanityBar(100).
 
 
@@ -149,7 +149,9 @@ describe(maidsroom):-
   at(deadBody, maidsroom, not),
   write('The smells is horrible here.'), nl,
   write('It seems that is something behind that bed!'),nl,
-  write('LOOOKK!! A dead body!.'),nl.
+  write('LOOOKK!! A dead body!.'),nl,
+  write('You are in a maids room.'),nl,
+  write('To the west is a storageroom.'),nl.
 
 describe(maidsroom):-
   write('You are in a maids room.'),nl,
@@ -210,6 +212,8 @@ at(thirdPassKey, maidsroom,not).
 at(bed, maidsroom, fixed).
 at(lighter, maidsroom, not).
 
+at(dirtyRoomKey, in_bag, not).
+at(dirtyPassKey, in_bag, not).
 
 
 /* Deskripsi Objek */
@@ -243,7 +247,8 @@ examine(shovel) :- write('Just an ordinary shovel.\n').
 examine(hammer) :- write('Just an ordinary hammer.\n').
 examine(gun) :- write('A gun, there is no bullet in it, maybe it has been used...\n').
 examine(screwdriver) :- write('Just an ordinary screwdriver.\n').
-examine(deadBody) :- write('A dead body that smells so bad, i wonder who this is...\n').
+examine(deadBody) :- write('A dead body that smells so bad, i wonder who this is... \n'),
+					 write('This body must be burried somewhere.'),nl.
 examine(thirdPassKey) :- write('.\n').
 examine(bed) :- write('A bed that seems to be where someone usually sleep.\n').
 examine(lighter) :- write('Just an ordinary lighter.\n').
@@ -251,6 +256,7 @@ examine(hole):- write('A big hole as an outcome of your digging\n').
 examine(egg):- write('An egg you find in the empty chicken shack\n').
 examine(flour):- write('The flour that you find in the cupboard\n').
 examine(apple):- write('The apple that you find in the fruitTree\n').
+examine(applePie) :- write('An apple pie.\n').
 
 examine_check(X) :-
   i_am_at(Y),
@@ -279,10 +285,17 @@ talk(magicalBook) :-
   write('Good Luck!'), nl.
 
 talk(strangeDoll) :-
-  i_am_at(kidsroom),
+  (i_am_at(kidsroom); at(strangeDoll, in_bag, not)),
   alive(strangeDoll),
   write('MOMMY?? I want to spend time with you..'), nl,
   write('Do not try to move me mommy, because I am in love with this room.'), nl.
+  
+talk(mrX) :-
+  mrX_is_here,
+  write('WHAT ARE YOU DOING HERE? GO AWAY!'),nl.
+  
+talk(X) :-
+  write('You cannot talk to '), write(X), nl.
 
 /* Perintah Open */
 listCanOpen([refrigerator,strangebox,emptyChickenShack,cupboard,strangeLittleHill,fruitTree]).
@@ -369,8 +382,9 @@ open(X):-
   write('Object cannot be opened!'), nl, !.
 
 /* Perintah Use */
-use(shovel,strangeLittleHill) :-
+use(shovel) :-
   i_am_at(backyard),
+  at(strangeLittleHill, backyard, fixed),
   at(shovel, in_bag, not),
   write('You dug the strange hill.'),nl,
   write('You found some dirty things.. You need to clean it.'),nl,
@@ -381,60 +395,71 @@ use(shovel,strangeLittleHill) :-
   retract(at(strangeLittleHill, backyard, fixed)),
   assertz(at(hole, backyard, fixed)).
   
-use(shovel,strangeLittleHill) :-
-  i_am_at(backyard),
-  \+ at(shovel, in_bag, not),
-  write('You dont have the shovel.'),nl.
  
-use(deadBody,hole) :-
+use(deadBody) :-
   i_am_at(backyard),
+  at(hole, backyard, fixed),
   at(shovel, in_bag, not),
   at(deadBody, in_bag, not),
   write('You put the deadBody inside the hole and bury it.'),nl,
-  write('Suddenly the sense  being followed went away..'),nl,
+  write('Suddenly the sense of being followed went away..'),nl,
   retract(at(hole, backyard, fixed)),
   retract(at(deadBody, in_bag, not)),
   retract(alive(mrX)).
 
-use(sink,dirtyRoomKey) :-
-  i_am_at(bathroom),
-  at(dirtyRoomKey, in_bag, not),
-  write('With the running water, I can clean the key.'),nl,
-  write('The key is clean now. Its the kidsroom key!'),nl,
-  retract(at(dirtyRoomKey, in_bag, not)),
-  assertz(at(kidsroomKey, in_bag, not)).
-
-use(sink,dirtyPassKey) :-
-  i_am_at(bathroom),
-  at(dirtyPassKey, in_bag, not),
-  write('With the running water, the key is cleaned'),nl,
-  write('The key is clean now. Its the first pass key!'),nl,
-  retract(at(dirtyPassKey, in_bag, not)),
-  assertz(at(firstPassKey , in_bag, not)).
-
-use(paperOfSpell,strangeDoll) :-
+use(paperOfSpell) :-
+  at(paperOfSpell, in_bag, not),
+  at(strangeDoll, in_bag, not),
   write('BIDIBI BOBIDI BOOOO'),nl,
   write('Okay Mom! I think its time I go back to sleep'),nl,
   retract(alive(strangeDoll)).
   
-use(lighter, stove) :-
+use(lighter) :-
+  i_am_at(kitchen),
+  at(lighter, in_bag, not),
   at(apple, in_bag, not),
   at(egg, in_bag, not),
   at(flour, in_bag, not),
   write('With some fruits, eggs, and flour that I found, I can make an apple pie.'),nl,
   write('It taste delicious.'),nl,
-  retract(at(fruit, in_bag, not)),
+  retract(at(apple, in_bag, not)),
   retract(at(egg, in_bag, not)),
-  retract(at(flour, in_bag, not)).
+  retract(at(flour, in_bag, not)),
+  assertz(at(applePie, in_bag, not)).
 
-use(lighter, stove) :-
-  \+ at(apple, in_bag, not),
-  \+ at(egg, in_bag, not),
-  \+ at(flour, in_bag, not),
-  write('I need some ingredients to cook'),nl.
+use(lighter) :-
+  at(lighter, in_bag, not),
+  write('I need some ingredients to cook.'),nl.
 
-use(X,_) :-
+use(X) :-
+  at(X, in_bag, not),
   write(X), write(' cannot be used.'),nl,!.
+  
+use(X) :- 
+  write(X), write(' is not in your inventory.'),nl,!.
+  
+clean(dirtyPassKey) :-
+  i_am_at(bathroom),
+  at(dirtyPassKey, in_bag, not),
+  write('With the running water, I can clean the key.'),nl,
+  write('The key is clean now. Its the first pass key!'),nl,
+  retract(at(dirtyPassKey, in_bag, not)),
+  assertz(at(firstPassKey , in_bag, not)).
+ 
+clean(dirtyRoomKey) :-
+  i_am_at(bathroom),
+  at(dirtyPassKey, in_bag, not),
+  write('With the running water, I can clean the key.'),nl,
+  write('The key is clean now. Its the kidsroom key!'),nl,
+  retract(at(dirtyRoomKey, in_bag, not)),
+  assertz(at(kidsroomKey, in_bag, not)).
+  
+clean(X) :-
+  at(X, in_bag, not),
+  write('You need a place to clean this.'),nl,!.
+  
+clean(X) :- 
+  write(X), write(' is not in your inventory.'),nl,!.
 
 
 
@@ -467,6 +492,26 @@ appearMrX(0) :-
   
 appearMrX(_) :- retractall(mrX_is_here).
 
+holdStrangeDoll :-
+  alive(strangeDoll), at(strangeDoll, in_bag, not),
+  retract(sanityBar(X)),
+  Y is X - 1,
+  assertz(sanityBar(Y)),
+  write('The strange doll is creeping you out.'),nl,
+  sanityStat.
+  
+holdStrangeDoll.
+
+holdDeadBody :-
+  at(deadBody, in_bag, not),
+  retract(sanityBar(X)),
+  Y is X - 1,
+  assertz(sanityBar(Y)),
+  write('The dead body is creeping you out.'),nl,
+  sanityStat.
+  
+holdDeadBody.
+
 go(D) :- 
   alive(mrX),
   i_am_at(X),
@@ -475,6 +520,8 @@ go(D) :-
   assertz(i_am_at(Y)),
   random(0, 9, R),
   appearMrX(R),
+  holdStrangeDoll,
+  holdDeadBody,
   look,
   !.
 
@@ -514,6 +561,7 @@ take(X) :-
 
 /* perintah Drop */
 drop(strangeDoll) :-
+  alive(strangeDoll),
   at(strangeDoll, in_bag, not),
   i_am_at(_),
   retract(at(strangeDoll, in_bag, not)),
@@ -600,7 +648,8 @@ do(examine(X)) :- examine_check(X), !, fail.
 do(instructions) :- instructions, !, fail.
 do(talk(X)) :- talk(X), !, fail.
 do(take(X)) :- take(X), !, fail.
-do(use(X,Y)) :- use(X,Y), !, fail.
+do(use(X)) :- use(X), !, fail.
+do(clean(X)) :- clean(X), !, fail.
 do(quit) :- 
   write('Thank you for playing Hallowed, we are waiting here to haunt you next time :)\n').
 do(_) :- write('Invalid command.\n'), !, fail.
