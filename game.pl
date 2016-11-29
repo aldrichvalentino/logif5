@@ -518,8 +518,9 @@ drop(strangeDoll) :-
   i_am_at(_),
   retract(at(strangeDoll, in_bag, not)),
   assertz(at(strangeDoll, kidsroom, not)),
-  write(strangeDoll), write(' strangely ran back into the kidsroom.'),
-  nl.
+  write('You dropped the strangeDoll.'),nl,
+  write('The strangeDoll is looking at you...'),nl,
+  write('You looked away, but when you look at the doll again.. It is gone.'),nl.
 
 drop(X) :-
         at(X, in_bag, not),
